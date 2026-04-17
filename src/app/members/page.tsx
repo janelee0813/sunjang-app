@@ -142,7 +142,7 @@ export default function MembersPage() {
                     {m.birth_year ? `${new Date().getFullYear() - m.birth_year}세` : '-'}
                   </td>
                   <td style={{ padding: '10px 14px', color: '#6c757d', fontFamily: 'monospace' }} onClick={() => router.push(`/members/${m.id}`)}>
-                    {m.phone ? m.phone.replace(/(\d{3})-(\d{4})-(\d{4})/, '$1-****-$3') : '-'}
+                    {m.phone ?? '-'}
                   </td>
                   <td style={{ padding: '10px 14px', color: '#6c757d' }} onClick={() => router.push(`/members/${m.id}`)}>{m.job ?? '-'}</td>
                   <td style={{ padding: '10px 14px', color: '#6c757d' }} onClick={() => router.push(`/members/${m.id}`)}>{m.joined_at ?? '-'}</td>
