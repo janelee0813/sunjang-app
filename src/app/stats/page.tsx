@@ -21,9 +21,14 @@ export default function StatsPage() {
         .from('members').select('*')
         .eq('group_id', user.group_id)
         .neq('member_status', 'removed')
+        .neq('member_status', 'lineout')
         .order('name');
-      const { data: r } = await supabase
-        .from('meeting_member_records').select('*');
+
+      const memberIds = (m ?? []).map((mem: any) => mem.id);
+      const { data: r } = memberIds.length > 0
+        ? await supabase.from('meeting_member_records').select('*').in('member_id', memberIds)
+        : { data: [] };
+
       setMembers(m ?? []);
       setRecords(r ?? []);
       setLoading(false);
