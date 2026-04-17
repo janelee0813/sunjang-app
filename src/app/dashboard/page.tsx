@@ -56,10 +56,11 @@ export default function DashboardPage() {
         .eq('meeting_date', lastSunday)
         .maybeSingle();
 
-      if (lastMeeting) {
+      if (lastMeeting && memberIds.length > 0) {
         const { data: r } = await supabase
           .from('meeting_member_records').select('*')
-          .eq('meeting_id', lastMeeting.id);
+          .eq('meeting_id', lastMeeting.id)
+          .in('member_id', memberIds);
         setLatestRecords(r ?? []);
       }
 
