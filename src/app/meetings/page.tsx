@@ -73,11 +73,13 @@ export default function MeetingsPage() {
         .from('members').select('*')
         .eq('group_id', user.group_id)
         .in('member_status', ['active', 'care'])
+        .order('is_leader', { ascending: false })
         .order('name');
 
       const initialRows = (m ?? []).map((member: any) => ({
         member_id: member.id,
         member_name: member.name,
+        is_leader: member.is_leader ?? false,
         worship_attended: false,
         department_attended: false,
         group_attended: false,
@@ -133,6 +135,7 @@ export default function MeetingsPage() {
             visitation_needed: ex.visitation_needed,
           } : { ...row, worship_attended: false, department_attended: false, group_attended: false, prayer_request: '', special_notes: '', visitation_needed: false };
         }));
+
       } else {
         setGroupNotes('');
         setIsUrgent(false);
@@ -353,7 +356,12 @@ export default function MeetingsPage() {
             <tbody>
               {rows.map((row, i) => (
                 <tr key={row.member_id} style={{ background: i % 2 === 0 ? 'white' : '#fafafa', borderBottom: '1px solid #f1f3f5', verticalAlign: 'top' }}>
-                  <td style={{ padding: '10px 10px', fontWeight: '500', whiteSpace: 'nowrap' }}>{row.member_name}</td>
+                  <td style={{ padding: '10px 10px', fontWeight: '500', whiteSpace: 'nowrap' }}>
+                    {row.is_leader && (
+                      <span style={{ fontSize: '10px', background: '#1a56db', color: 'white', borderRadius: '4px', padding: '1px 5px', marginRight: '5px', fontWeight: '600' }}>순장</span>
+                    )}
+                    {row.member_name}
+                  </td>
                   <td style={{ padding: '10px 10px' }}>
                     <div style={chkStyle(row.worship_attended, '#1a56db')} onClick={() => updateRow(i, 'worship_attended', !row.worship_attended)}>
                       {row.worship_attended && '✓'}

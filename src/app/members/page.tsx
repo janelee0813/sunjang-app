@@ -30,6 +30,7 @@ export default function MembersPage() {
       .eq('group_id', user.group_id)
       .neq('member_status', 'removed')
       .neq('member_status', 'lineout')
+      .order('is_leader', { ascending: false })
       .order('name');
 
     setMembers(m ?? []);
@@ -130,7 +131,12 @@ export default function MembersPage() {
                   onMouseEnter={e => (e.currentTarget.style.background = '#f8f9fa')}
                   onMouseLeave={e => (e.currentTarget.style.background = 'white')}
                 >
-                  <td style={{ padding: '10px 14px', fontWeight: '500' }} onClick={() => router.push(`/members/${m.id}`)}>{m.name}</td>
+                  <td style={{ padding: '10px 14px', fontWeight: '500' }} onClick={() => router.push(`/members/${m.id}`)}>
+                    {m.is_leader && (
+                      <span style={{ fontSize: '10px', background: '#1a56db', color: 'white', borderRadius: '4px', padding: '1px 5px', marginRight: '5px', fontWeight: '600' }}>순장</span>
+                    )}
+                    {m.name}
+                  </td>
                   <td style={{ padding: '10px 14px', color: '#6c757d' }} onClick={() => router.push(`/members/${m.id}`)}>{m.gender}성</td>
                   <td style={{ padding: '10px 14px', color: '#6c757d' }} onClick={() => router.push(`/members/${m.id}`)}>
                     {m.birth_year ? `${new Date().getFullYear() - m.birth_year}세` : '-'}

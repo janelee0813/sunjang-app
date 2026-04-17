@@ -25,6 +25,7 @@ export default function MemberDetailPage() {
       setEditForm({
         name: m.name ?? '',
         gender: m.gender ?? '남',
+        is_leader: m.is_leader ?? false,
         birth_year: m.birth_year ?? '',
         birth_month: m.birth_month ?? '',
         birth_day: m.birth_day ?? '',
@@ -61,6 +62,7 @@ export default function MemberDetailPage() {
       const payload: any = {
         name: editForm.name,
         gender: editForm.gender,
+        is_leader: editForm.is_leader,
         birth_year: editForm.birth_year ? parseInt(editForm.birth_year) : null,
         birth_month: editForm.birth_month ? parseInt(editForm.birth_month) : null,
         birth_day: editForm.birth_day ? parseInt(editForm.birth_day) : null,
@@ -148,7 +150,12 @@ export default function MemberDetailPage() {
           {member.name.slice(0, 2)}
         </div>
         <div style={{ flex: 1 }}>
-          <h1 style={{ fontSize: '20px', fontWeight: '500', margin: '0' }}>{member.name}</h1>
+          <h1 style={{ fontSize: '20px', fontWeight: '500', margin: '0', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {member.name}
+            {member.is_leader && (
+              <span style={{ fontSize: '11px', background: '#1a56db', color: 'white', borderRadius: '4px', padding: '2px 7px', fontWeight: '600' }}>순장</span>
+            )}
+          </h1>
           <p style={{ fontSize: '13px', color: '#6c757d', margin: '4px 0 0' }}>
             {member.gender}성 · {age ? `${age}세` : '-'}
             {birthdayStr && ` · 생일 ${birthdayStr}`}
@@ -176,7 +183,7 @@ export default function MemberDetailPage() {
       {isEditing && (
         <div style={{ background: 'white', border: '1px solid #1a56db', borderRadius: '12px', padding: '1.5rem', marginBottom: '1.5rem' }}>
           <h3 style={{ fontSize: '13px', fontWeight: '500', margin: '0 0 16px', color: '#1a56db' }}>정보 수정</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
             <div>
               <label style={{ fontSize: '11px', color: '#6c757d', display: 'block', marginBottom: '3px' }}>이름</label>
               <input value={editForm.name} onChange={e => setEditForm((p: any) => ({ ...p, name: e.target.value }))} style={inputStyle} />
@@ -187,6 +194,19 @@ export default function MemberDetailPage() {
                 <option value="남">남성</option>
                 <option value="여">여성</option>
               </select>
+            </div>
+            <div>
+              <label style={{ fontSize: '11px', color: '#6c757d', display: 'block', marginBottom: '3px' }}>역할</label>
+              <div style={{ display: 'flex', gap: '6px' }}>
+                <button type="button" onClick={() => setEditForm((p: any) => ({ ...p, is_leader: false }))}
+                  style={{ flex: 1, padding: '7px 0', border: `1.5px solid ${!editForm.is_leader ? '#1a56db' : '#dee2e6'}`, borderRadius: '6px', fontSize: '12px', cursor: 'pointer', background: !editForm.is_leader ? '#eff6ff' : 'white', color: !editForm.is_leader ? '#1a56db' : '#6c757d', fontWeight: !editForm.is_leader ? '500' : '400' }}>
+                  순원
+                </button>
+                <button type="button" onClick={() => setEditForm((p: any) => ({ ...p, is_leader: true }))}
+                  style={{ flex: 1, padding: '7px 0', border: `1.5px solid ${editForm.is_leader ? '#1a56db' : '#dee2e6'}`, borderRadius: '6px', fontSize: '12px', cursor: 'pointer', background: editForm.is_leader ? '#1a56db' : 'white', color: editForm.is_leader ? 'white' : '#6c757d', fontWeight: editForm.is_leader ? '600' : '400' }}>
+                  순장
+                </button>
+              </div>
             </div>
             <div>
               <label style={{ fontSize: '11px', color: '#6c757d', display: 'block', marginBottom: '3px' }}>출생연도</label>

@@ -11,6 +11,7 @@ export default function MemberAddPage() {
   const [form, setForm] = useState({
     name: '',
     gender: '남',
+    is_leader: false,
     birth_year: '',
     birth_month: '',
     birth_day: '',
@@ -44,6 +45,7 @@ export default function MemberAddPage() {
         group_id: groupId,
         name: form.name.trim(),
         gender: form.gender,
+        is_leader: form.is_leader,
         birth_year: form.birth_year ? parseInt(form.birth_year) : null,
         birth_month: form.birth_month ? parseInt(form.birth_month) : null,
         birth_day: form.birth_day ? parseInt(form.birth_day) : null,
@@ -83,8 +85,8 @@ export default function MemberAddPage() {
 
       <div style={{ background: 'white', border: '1px solid #e9ecef', borderRadius: '12px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
-        {/* 이름 + 성별 */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 140px', gap: '12px' }}>
+        {/* 이름 + 성별 + 역할 */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 120px 120px', gap: '12px' }}>
           <div>
             <label style={labelStyle}>이름 *</label>
             <input value={form.name} onChange={e => set('name', e.target.value)} placeholder="홍길동" style={inputStyle} />
@@ -95,6 +97,31 @@ export default function MemberAddPage() {
               <option value="남">남성</option>
               <option value="여">여성</option>
             </select>
+          </div>
+          <div>
+            <label style={labelStyle}>역할</label>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button
+                type="button"
+                onClick={() => setForm(p => ({ ...p, is_leader: false }))}
+                style={{
+                  flex: 1, padding: '8px 0', border: `1.5px solid ${!form.is_leader ? '#1a56db' : '#dee2e6'}`,
+                  borderRadius: '8px', fontSize: '13px', cursor: 'pointer',
+                  background: !form.is_leader ? '#eff6ff' : 'white',
+                  color: !form.is_leader ? '#1a56db' : '#6c757d', fontWeight: !form.is_leader ? '500' : '400',
+                }}
+              >순원</button>
+              <button
+                type="button"
+                onClick={() => setForm(p => ({ ...p, is_leader: true }))}
+                style={{
+                  flex: 1, padding: '8px 0', border: `1.5px solid ${form.is_leader ? '#1a56db' : '#dee2e6'}`,
+                  borderRadius: '8px', fontSize: '13px', cursor: 'pointer',
+                  background: form.is_leader ? '#1a56db' : 'white',
+                  color: form.is_leader ? 'white' : '#6c757d', fontWeight: form.is_leader ? '600' : '400',
+                }}
+              >순장</button>
+            </div>
           </div>
         </div>
 
