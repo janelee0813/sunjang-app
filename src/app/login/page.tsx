@@ -27,7 +27,7 @@ export default function LoginPage() {
     <div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',background:'#f8f9fa'}}>
       <div style={{background:'white',padding:'2.5rem',borderRadius:'12px',border:'1px solid #e9ecef',width:'100%',maxWidth:'380px'}}>
         <div style={{textAlign:'center',marginBottom:'2rem'}}>
-          <div style={{width:'48px',height:'48px',background:'#1a56db',borderRadius:'10px',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 1rem',color:'white',fontSize:'10px',fontWeight:'500',textAlign:'center',lineHeight:'1.3',padding:'4px'}}>분당우리교회 4청년부</div>
+          <div style={{height:'44px',background:'#1a56db',borderRadius:'10px',display:'inline-flex',alignItems:'center',justifyContent:'center',margin:'0 auto 1rem',color:'white',fontSize:'13px',fontWeight:'500',padding:'0 16px',whiteSpace:'nowrap'}}>분당우리교회 4청년부</div>
           <h1 style={{fontSize:'18px',fontWeight:'500',margin:'0'}}>이종환 순</h1>
           <p style={{fontSize:'13px',color:'#6c757d',marginTop:'4px'}}>순원관리 시스템</p>
         </div>
