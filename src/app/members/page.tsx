@@ -28,7 +28,8 @@ export default function MembersPage() {
     const { data: m } = await supabase
       .from('members').select('*')
       .eq('group_id', user.group_id)
-      .not('member_status', 'in', '("removed","lineout")')
+      .neq('member_status', 'removed')
+      .neq('member_status', 'lineout')
       .order('name');
 
     setMembers(m ?? []);
@@ -45,14 +46,22 @@ export default function MembersPage() {
 
   const handleLineout = async (id: string, name: string) => {
     if (!confirm(`'${name}'을(를) 라인아웃 처리하시겠습니까?\n라인아웃된 순원은 라인아웃 메뉴에서 확인할 수 있습니다.`)) return;
-    await supabase.from('members').update({ member_status: 'lineout' }).eq('id', id);
+    const { error } = await supabase.from('members').update({ member_status: 'lineout' }).eq('id', id);
+    if (error) {
+      alert(`오류가 발생했습니다: ${error.message}\n\nSupabase SQL Editor에서 아래 SQL을 실행해주세요:\nALTER TABLE members DROP CONSTRAINT IF EXISTS members_member_status_check;\nALTER TABLE members ADD CONSTRAINT members_member_status_check CHECK (member_status IN ('active','care','inactive','moved','removed','lineout'));`);
+      return;
+    }
     setActionMenu(null);
     loadMembers();
   };
 
   const handleDelete = async (id: string, name: string) => {
     if (!confirm(`'${name}'을(를) 삭제하시겠습니까?\n삭제된 순원은 목록에서 완전히 제외됩니다.`)) return;
-    await supabase.from('members').update({ member_status: 'removed' }).eq('id', id);
+    const { error } = await supabase.from('members').update({ member_status: 'removed' }).eq('id', id);
+    if (error) {
+      alert(`오류가 발생했습니다: ${error.message}`);
+      return;
+    }
     setActionMenu(null);
     loadMembers();
   };

@@ -31,8 +31,8 @@ export default function DashboardPage() {
       const { data: m } = await supabase
         .from('members').select('*')
         .eq('group_id', user.group_id)
-        .not('member_status', 'in', '("removed","lineout")')
-        .neq('member_status', 'removed');
+        .neq('member_status', 'removed')
+        .neq('member_status', 'lineout');
 
       const { data: mt } = await supabase
         .from('meetings').select('*')
