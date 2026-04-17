@@ -383,7 +383,12 @@ export default function DashboardPage() {
                 formatter={(value: any) => [`${value}%`]}
                 contentStyle={{ fontSize: '12px', borderRadius: '8px', border: '1px solid #e9ecef' }}
               />
-              <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: '12px', paddingTop: '8px' }} />
+              <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: '12px', paddingTop: '8px' }}
+                payload={[
+                  { value: '예배', type: 'circle', color: '#1a56db' },
+                  { value: '부서', type: 'circle', color: '#0f6e56' },
+                  { value: '순모임', type: 'circle', color: '#7c3aed' },
+                ]} />
               <Bar dataKey="예배" fill="#1a56db" radius={[3, 3, 0, 0]} maxBarSize={28} />
               <Bar dataKey="부서" fill="#0f6e56" radius={[3, 3, 0, 0]} maxBarSize={28} />
               <Bar dataKey="순모임" fill="#7c3aed" radius={[3, 3, 0, 0]} maxBarSize={28} />
