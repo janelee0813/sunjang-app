@@ -67,7 +67,10 @@ export default function UploadPage() {
         group_id: groupId,
         name: r.name,
         gender: r.gender,
+        is_leader: r.is_leader,
         birth_year: r.birth_year ?? null,
+        birth_month: r.birth_month ?? null,
+        birth_day: r.birth_day ?? null,
         phone: r.phone || null,
         address: r.address || null,
         job: r.job || null,
@@ -155,7 +158,6 @@ export default function UploadPage() {
             prayer_request: row.prayer_request || null,
             special_notes: row.special_notes || null,
             visitation_needed: row.visitation_needed,
-            pastor_feedback: row.pastor_feedback || null,
           }, { onConflict: 'meeting_id,member_id' });
           saved++;
         }
@@ -230,7 +232,7 @@ export default function UploadPage() {
                   <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
                     <thead>
                       <tr style={{ background: '#f8f9fa' }}>
-                        {['행', '이름', '성별', '생년도', '연락처', '직업', '상태', '오류'].map(h => (
+                        {['행', '이름', '역할', '성별', '생년도', '연락처', '직업', '상태', '오류'].map(h => (
                           <th key={h} style={{ padding: '7px 10px', textAlign: 'left', fontSize: '11px', color: '#6c757d', fontWeight: '500', borderBottom: '1px solid #e9ecef', whiteSpace: 'nowrap' }}>{h}</th>
                         ))}
                       </tr>
@@ -240,6 +242,7 @@ export default function UploadPage() {
                         <tr key={r._row} style={{ background: r._errors.length ? '#fff5f5' : 'white', borderBottom: '1px solid #f1f3f5' }}>
                           <td style={{ padding: '6px 10px', color: '#6c757d' }}>{r._row}</td>
                           <td style={{ padding: '6px 10px', fontWeight: '500' }}>{r.name}</td>
+                          <td style={{ padding: '6px 10px' }}>{r.is_leader ? '순장' : '순원'}</td>
                           <td style={{ padding: '6px 10px' }}>{r.gender}성</td>
                           <td style={{ padding: '6px 10px', color: '#6c757d' }}>{r.birth_year ?? '-'}</td>
                           <td style={{ padding: '6px 10px', color: '#6c757d' }}>{r.phone || '-'}</td>
