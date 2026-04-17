@@ -111,12 +111,24 @@ export default function DashboardPage() {
         setChartData(cd);
       }
 
-      // 중요일정
+      // 중요일정 - 지난 날짜 자동삭제 후 임박한 순 정렬
       try {
+        const today = new Date();
+        const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
+        // 날짜가 있고 오늘 이전인 항목 삭제
+        await supabase
+          .from('group_events')
+          .delete()
+          .eq('group_id', user.group_id)
+          .not('event_date', 'is', null)
+          .lt('event_date', todayStr);
+
+        // 남은 항목: 날짜 있는 것은 오름차순, 날짜 없는 것은 후순위
         const { data: ev } = await supabase
           .from('group_events').select('*')
           .eq('group_id', user.group_id)
-          .order('created_at', { ascending: false });
+          .order('event_date', { ascending: true, nullsFirst: false });
         setEvents(ev ?? []);
       } catch (_) {}
 
@@ -133,7 +145,15 @@ export default function DashboardPage() {
         title: newEvent.trim(),
         event_date: newEventDate || null,
       }).select().single();
-      if (data) setEvents(prev => [data, ...prev]);
+      if (data) setEvents(prev => {
+        const next = [...prev, data];
+        return next.sort((a, b) => {
+          if (!a.event_date && !b.event_date) return 0;
+          if (!a.event_date) return 1;
+          if (!b.event_date) return -1;
+          return a.event_date.localeCompare(b.event_date);
+        });
+      });
       setNewEvent('');
       setNewEventDate('');
     } catch (_) {}
