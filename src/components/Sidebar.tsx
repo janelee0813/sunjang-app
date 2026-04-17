@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 
@@ -57,6 +58,25 @@ export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
+  const [groupName, setGroupName] = useState('이종환 순');
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const cached = sessionStorage.getItem('groupName');
+        if (cached) { setGroupName(cached); return; }
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+        const { data: ud } = await supabase.from('users').select('group_id').eq('id', user.id).single();
+        if (!ud?.group_id) return;
+        const { data: gs } = await supabase.from('group_settings').select('group_name').eq('group_id', ud.group_id).maybeSingle();
+        if (gs?.group_name) {
+          setGroupName(gs.group_name);
+          sessionStorage.setItem('groupName', gs.group_name);
+        }
+      } catch (_) {}
+    })();
+  }, []);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -79,7 +99,7 @@ export default function Sidebar() {
         padding: '20px 16px 16px',
         borderBottom: '1px solid #1f2937',
       }}>
-        <p style={{ fontSize: '11px', color: '#6b7280', margin: '0 0 2px', letterSpacing: '0.05em' }}>이종환 순</p>
+        <p style={{ fontSize: '11px', color: '#6b7280', margin: '0 0 2px', letterSpacing: '0.05em' }}>{groupName}</p>
         <p style={{ fontSize: '15px', fontWeight: '600', color: '#f9fafb', margin: '0' }}>순원관리 시스템</p>
       </div>
 

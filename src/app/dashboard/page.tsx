@@ -23,6 +23,8 @@ export default function DashboardPage() {
   const [groupId, setGroupId] = useState('');
   const [loading, setLoading] = useState(true);
   const [chartData, setChartData] = useState<any[]>([]);
+  const [birthdayNoticeDays, setBirthdayNoticeDays] = useState(7);
+  const [chartMonths, setChartMonths] = useState(2);
 
   // 중요일정
   const [events, setEvents] = useState<any[]>([]);
@@ -75,9 +77,20 @@ export default function DashboardPage() {
       setRecords(allR ?? []);
       setMembers(m ?? []);
 
-      // ── 최근 2개월 출석 통계 ──────────────────────
+      // group_settings 로드 (차트 기간, 생일 기준 등에 사용)
+      let localChartMonths = 2;
+      let localBirthdayDays = 7;
+      try {
+        const { data: gs } = await supabase.from('group_settings').select('birthday_notice_days, chart_months').eq('group_id', user.group_id).maybeSingle();
+        if (gs) {
+          if (gs.birthday_notice_days) { setBirthdayNoticeDays(gs.birthday_notice_days); localBirthdayDays = gs.birthday_notice_days; }
+          if (gs.chart_months) { setChartMonths(gs.chart_months); localChartMonths = gs.chart_months; }
+        }
+      } catch (_) {}
+
+      // ── 최근 N개월 출석 통계 ──────────────────────
       const now = new Date();
-      const twoMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 2, now.getDate());
+      const twoMonthsAgo = new Date(now.getFullYear(), now.getMonth() - localChartMonths, now.getDate());
       const fromDate = `${twoMonthsAgo.getFullYear()}-${String(twoMonthsAgo.getMonth() + 1).padStart(2, '0')}-${String(twoMonthsAgo.getDate()).padStart(2, '0')}`;
 
       const { data: recentMeetings } = await supabase
@@ -195,7 +208,7 @@ export default function DashboardPage() {
     if (!m.birth_month || !m.birth_day) return false;
     const bDate = new Date(today.getFullYear(), m.birth_month - 1, m.birth_day);
     const diff = bDate.getTime() - today.getTime();
-    return diff >= 0 && diff <= 7 * 24 * 60 * 60 * 1000;
+    return diff >= 0 && diff <= birthdayNoticeDays * 24 * 60 * 60 * 1000;
   };
 
   const cardStyle: React.CSSProperties = {
