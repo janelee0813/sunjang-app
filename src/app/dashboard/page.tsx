@@ -113,7 +113,7 @@ export default function DashboardPage() {
   const groupRate = latestRecords.length
     ? Math.round(latestRecords.filter(r => r.group_attended).length / latestRecords.length * 100) : 0;
   const visitCount = records.filter(r => r.visitation_needed).length;
-  const prayers = records.filter(r => r.prayer_request).slice(0, 3);
+  const prayers = latestRecords.filter(r => r.prayer_request);
 
   // 생일 계산 (이번달 + 다음달)
   const today = new Date();
@@ -174,74 +174,8 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* 2열 그리드 */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
-        {/* 최근 출석 현황 */}
-        <div style={{ background: 'white', border: '1px solid #e9ecef', borderRadius: '12px', padding: '1.2rem' }}>
-          <h3 style={{ fontSize: '13px', fontWeight: '500', margin: '0 0 12px' }}>
-            지난주 순모임 출석 현황
-            {lastSundayDate && (
-              <span style={{ fontSize: '11px', color: '#6c757d', fontWeight: '400', marginLeft: '6px' }}>
-                ({parseInt(lastSundayDate.slice(5,7))}/{parseInt(lastSundayDate.slice(8,10))})
-              </span>
-            )}
-          </h3>
-          {activeMembers.length === 0 ? (
-            <p style={{ fontSize: '13px', color: '#6c757d' }}>데이터가 없습니다.</p>
-          ) : latestRecords.length === 0 ? (
-            <p style={{ fontSize: '13px', color: '#6c757d' }}>
-              {lastSundayDate}에 저장된 기록이 없습니다.<br/>
-              <span style={{ fontSize: '12px' }}>주차 기록 메뉴에서 해당 날짜 기록을 저장해주세요.</span>
-            </p>
-          ) : (
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
-              <thead>
-                <tr>
-                  {['이름', '예배', '부서', '순모임'].map(h => (
-                    <th key={h} style={{ textAlign: h === '이름' ? 'left' : 'center', padding: '6px 8px', fontSize: '11px', color: '#6c757d', fontWeight: '500', borderBottom: '1px solid #f1f3f5' }}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {activeMembers.map(m => {
-                  const rec = latestRecords.find(r => r.member_id === m.id);
-                  return (
-                    <tr key={m.id}>
-                      <td style={{ padding: '7px 8px', borderBottom: '1px solid #f8f9fa' }}>{m.name}</td>
-                      {[rec?.worship_attended, rec?.department_attended, rec?.group_attended].map((v, i) => (
-                        <td key={i} style={{ padding: '7px 8px', textAlign: 'center', borderBottom: '1px solid #f8f9fa', color: v ? '#0f6e56' : '#dc3545', fontWeight: '500' }}>
-                          {rec ? (v ? 'O' : 'X') : '-'}
-                        </td>
-                      ))}
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          )}
-        </div>
-
-        {/* 기도제목 */}
-        <div style={{ background: 'white', border: '1px solid #e9ecef', borderRadius: '12px', padding: '1.2rem' }}>
-          <h3 style={{ fontSize: '13px', fontWeight: '500', margin: '0 0 12px' }}>최근 기도제목</h3>
-          {prayers.length === 0 ? (
-            <p style={{ fontSize: '13px', color: '#6c757d' }}>등록된 기도제목이 없습니다.</p>
-          ) : (
-            prayers.map(r => {
-              const member = members.find(m => m.id === r.member_id);
-              return (
-                <div key={r.id} style={{ borderBottom: '1px solid #f1f3f5', paddingBottom: '10px', marginBottom: '10px' }}>
-                  <p style={{ fontSize: '12px', fontWeight: '500', margin: '0 0 3px' }}>{member?.name ?? '-'}</p>
-                  <p style={{ fontSize: '12px', color: '#6c757d', margin: '0' }}>{r.prayer_request}</p>
-                </div>
-              );
-            })
-          )}
-        </div>
-      </div>
-
       {/* 생일 + 중요일정 */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
         {/* 생일 */}
         <div style={{ background: 'white', border: '1px solid #e9ecef', borderRadius: '12px', padding: '1.2rem' }}>
           <h3 style={{ fontSize: '13px', fontWeight: '500', margin: '0 0 12px' }}>
@@ -341,6 +275,72 @@ export default function DashboardPage() {
           <p style={{ fontSize: '11px', color: '#adb5bd', margin: '10px 0 0' }}>
             * Supabase에 group_events 테이블이 필요합니다.
           </p>
+        </div>
+      </div>
+
+      {/* 출석 현황 + 기도제목 */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+        {/* 최근 출석 현황 */}
+        <div style={{ background: 'white', border: '1px solid #e9ecef', borderRadius: '12px', padding: '1.2rem' }}>
+          <h3 style={{ fontSize: '13px', fontWeight: '500', margin: '0 0 12px' }}>
+            지난주 순모임 출석 현황
+            {lastSundayDate && (
+              <span style={{ fontSize: '11px', color: '#6c757d', fontWeight: '400', marginLeft: '6px' }}>
+                ({parseInt(lastSundayDate.slice(5,7))}/{parseInt(lastSundayDate.slice(8,10))})
+              </span>
+            )}
+          </h3>
+          {members.length === 0 ? (
+            <p style={{ fontSize: '13px', color: '#6c757d' }}>데이터가 없습니다.</p>
+          ) : latestRecords.length === 0 ? (
+            <p style={{ fontSize: '13px', color: '#6c757d' }}>
+              {lastSundayDate}에 저장된 기록이 없습니다.<br/>
+              <span style={{ fontSize: '12px' }}>주차 기록 메뉴에서 해당 날짜 기록을 저장해주세요.</span>
+            </p>
+          ) : (
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+              <thead>
+                <tr>
+                  {['이름', '예배', '부서', '순모임'].map(h => (
+                    <th key={h} style={{ textAlign: h === '이름' ? 'left' : 'center', padding: '6px 8px', fontSize: '11px', color: '#6c757d', fontWeight: '500', borderBottom: '1px solid #f1f3f5' }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {members.map(m => {
+                  const rec = latestRecords.find(r => r.member_id === m.id);
+                  return (
+                    <tr key={m.id}>
+                      <td style={{ padding: '7px 8px', borderBottom: '1px solid #f8f9fa' }}>{m.name}</td>
+                      {[rec?.worship_attended, rec?.department_attended, rec?.group_attended].map((v, i) => (
+                        <td key={i} style={{ padding: '7px 8px', textAlign: 'center', borderBottom: '1px solid #f8f9fa', color: v ? '#0f6e56' : '#dc3545', fontWeight: '500' }}>
+                          {rec ? (v ? 'O' : 'X') : '-'}
+                        </td>
+                      ))}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
+        </div>
+
+        {/* 기도제목 */}
+        <div style={{ background: 'white', border: '1px solid #e9ecef', borderRadius: '12px', padding: '1.2rem' }}>
+          <h3 style={{ fontSize: '13px', fontWeight: '500', margin: '0 0 12px' }}>최근 기도제목</h3>
+          {prayers.length === 0 ? (
+            <p style={{ fontSize: '13px', color: '#6c757d' }}>등록된 기도제목이 없습니다.</p>
+          ) : (
+            prayers.map(r => {
+              const member = members.find(m => m.id === r.member_id);
+              return (
+                <div key={r.id} style={{ borderBottom: '1px solid #f1f3f5', paddingBottom: '10px', marginBottom: '10px' }}>
+                  <p style={{ fontSize: '12px', fontWeight: '500', margin: '0 0 3px' }}>{member?.name ?? '-'}</p>
+                  <p style={{ fontSize: '12px', color: '#6c757d', margin: '0' }}>{r.prayer_request}</p>
+                </div>
+              );
+            })
+          )}
         </div>
       </div>
     </div>
