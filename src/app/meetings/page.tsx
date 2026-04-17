@@ -72,7 +72,7 @@ export default function MeetingsPage() {
       const { data: m } = await supabase
         .from('members').select('*')
         .eq('group_id', user.group_id)
-        .in('member_status', ['active', 'care'])
+        .in('member_status', ['active', 'care', 'inactive'])
         .order('is_leader', { ascending: false })
         .order('name');
 
