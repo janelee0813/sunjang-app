@@ -3,12 +3,21 @@ import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 
+// 지난 일요일 날짜 계산 (주차 기록과 동일한 로직)
+function getLastSunday(): string {
+  const today = new Date();
+  const s = new Date(today);
+  s.setDate(today.getDate() - today.getDay());
+  return `${s.getFullYear()}-${String(s.getMonth() + 1).padStart(2, '0')}-${String(s.getDate()).padStart(2, '0')}`;
+}
+
 export default function DashboardPage() {
   const supabase = createClient();
   const router = useRouter();
   const [members, setMembers] = useState<any[]>([]);
   const [records, setRecords] = useState<any[]>([]);
   const [latestRecords, setLatestRecords] = useState<any[]>([]);
+  const [lastSundayDate, setLastSundayDate] = useState('');
   const [groupId, setGroupId] = useState('');
   const [loading, setLoading] = useState(true);
 
@@ -37,16 +46,20 @@ export default function DashboardPage() {
       // 순원 ID 목록
       const memberIds = (m ?? []).map((mem: any) => mem.id);
 
-      const { data: mt } = await supabase
+      // 지난 일요일 날짜로 해당 주 모임 조회
+      const lastSunday = getLastSunday();
+      setLastSundayDate(lastSunday);
+
+      const { data: lastMeeting } = await supabase
         .from('meetings').select('*')
         .eq('group_id', user.group_id)
-        .order('meeting_date', { ascending: false })
-        .limit(1);
+        .eq('meeting_date', lastSunday)
+        .maybeSingle();
 
-      if (mt && mt.length > 0) {
+      if (lastMeeting) {
         const { data: r } = await supabase
           .from('meeting_member_records').select('*')
-          .eq('meeting_id', mt[0].id);
+          .eq('meeting_id', lastMeeting.id);
         setLatestRecords(r ?? []);
       }
 
@@ -164,9 +177,21 @@ export default function DashboardPage() {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
         {/* 최근 출석 현황 */}
         <div style={{ background: 'white', border: '1px solid #e9ecef', borderRadius: '12px', padding: '1.2rem' }}>
-          <h3 style={{ fontSize: '13px', fontWeight: '500', margin: '0 0 12px' }}>지난주 순모임 출석 현황</h3>
+          <h3 style={{ fontSize: '13px', fontWeight: '500', margin: '0 0 12px' }}>
+            지난주 순모임 출석 현황
+            {lastSundayDate && (
+              <span style={{ fontSize: '11px', color: '#6c757d', fontWeight: '400', marginLeft: '6px' }}>
+                ({parseInt(lastSundayDate.slice(5,7))}/{parseInt(lastSundayDate.slice(8,10))})
+              </span>
+            )}
+          </h3>
           {activeMembers.length === 0 ? (
             <p style={{ fontSize: '13px', color: '#6c757d' }}>데이터가 없습니다.</p>
+          ) : latestRecords.length === 0 ? (
+            <p style={{ fontSize: '13px', color: '#6c757d' }}>
+              {lastSundayDate}에 저장된 기록이 없습니다.<br/>
+              <span style={{ fontSize: '12px' }}>주차 기록 메뉴에서 해당 날짜 기록을 저장해주세요.</span>
+            </p>
           ) : (
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
               <thead>
