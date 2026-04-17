@@ -330,7 +330,7 @@ export default function DashboardPage() {
           ) : latestRecords.length === 0 ? (
             <p style={{ fontSize: '12px', color: '#6c757d', margin: 0 }}>
               {lastSundayDate}에 저장된 기록이 없습니다.<br/>
-              <span style={{ fontSize: '11px' }}>주차 기록 메뉴에서 해당 날짜 기록을 저장해주세요.</span>
+              <span style={{ fontSize: '11px' }}>주간 활동 메뉴에서 해당 날짜 기록을 저장해주세요.</span>
             </p>
           ) : (
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>

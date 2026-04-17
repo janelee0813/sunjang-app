@@ -47,7 +47,7 @@ export function downloadAttendanceTemplate() {
     ['예배/부서/순모임출석', 'O(출석) 또는 X(불참)'],
     ['심방필요', 'O 또는 X'],
     ['날짜가 같은 행들은 같은 주차 모임으로 처리됨'],
-    ['※ 교역자 피드백은 주차 기록 메뉴에서 직접 입력하세요'],
+    ['※ 교역자 피드백은 주간 활동 메뉴에서 직접 입력하세요'],
   ];
   const ws = XLSX.utils.aoa_to_sheet([header, ...example, ...guide]);
   ws['!cols'] = [

@@ -245,7 +245,7 @@ export default function MeetingsPage() {
 
   return (
     <div style={{ padding: '2rem' }}>
-      <h1 style={{ fontSize: '18px', fontWeight: '500', marginBottom: '1.5rem' }}>주차 기록 입력</h1>
+      <h1 style={{ fontSize: '18px', fontWeight: '500', marginBottom: '1.5rem' }}>주간 활동 입력</h1>
 
       {/* 분기 탭 */}
       <div style={{ display: 'flex', gap: '4px', background: '#f1f3f5', borderRadius: '10px', padding: '4px', marginBottom: '12px' }}>
