@@ -34,6 +34,9 @@ export default function DashboardPage() {
         .neq('member_status', 'removed')
         .neq('member_status', 'lineout');
 
+      // 순원 ID 목록
+      const memberIds = (m ?? []).map((mem: any) => mem.id);
+
       const { data: mt } = await supabase
         .from('meetings').select('*')
         .eq('group_id', user.group_id)
@@ -47,8 +50,10 @@ export default function DashboardPage() {
         setLatestRecords(r ?? []);
       }
 
-      const { data: allR } = await supabase
-        .from('meeting_member_records').select('*');
+      // 현재 그룹 순원의 기록만 조회
+      const { data: allR } = memberIds.length > 0
+        ? await supabase.from('meeting_member_records').select('*').in('member_id', memberIds)
+        : { data: [] };
       setRecords(allR ?? []);
       setMembers(m ?? []);
 

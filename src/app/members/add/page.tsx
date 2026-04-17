@@ -157,8 +157,7 @@ export default function MemberAddPage() {
             <select value={form.member_status} onChange={e => set('member_status', e.target.value)} style={{ ...inputStyle }}>
               <option value="active">활동중</option>
               <option value="care">관리필요</option>
-              <option value="inactive">비활성</option>
-              <option value="moved">이동</option>
+              <option value="inactive">장기불참</option>
             </select>
           </div>
         </div>

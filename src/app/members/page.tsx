@@ -67,13 +67,13 @@ export default function MembersPage() {
   };
 
   const statusLabel: Record<string, string> = {
-    active: '활동중', care: '관리필요', inactive: '비활성', moved: '이동'
+    active: '활동중', care: '관리필요', inactive: '장기불참', lineout: '라인아웃'
   };
   const statusColor: Record<string, string> = {
-    active: '#198754', care: '#dc8a00', inactive: '#dc3545', moved: '#6c757d'
+    active: '#198754', care: '#dc8a00', inactive: '#6c757d', lineout: '#7c3aed'
   };
   const statusBg: Record<string, string> = {
-    active: '#d1e7dd', care: '#fff3cd', inactive: '#f8d7da', moved: '#e9ecef'
+    active: '#d1e7dd', care: '#fff3cd', inactive: '#e9ecef', lineout: '#ede9fe'
   };
 
   if (loading) return <div style={{ padding: '2rem', color: '#6c757d' }}>불러오는 중...</div>;
@@ -103,8 +103,7 @@ export default function MembersPage() {
           <option value="">전체 상태</option>
           <option value="active">활동중</option>
           <option value="care">관리필요</option>
-          <option value="inactive">비활성</option>
-          <option value="moved">이동</option>
+          <option value="inactive">장기불참</option>
         </select>
       </div>
 

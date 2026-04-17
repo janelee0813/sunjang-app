@@ -45,9 +45,9 @@ export default function StatsPage() {
     return {total,worship,dept,group,worshipRate:Math.round(worship/total*100),deptRate:Math.round(dept/total*100),groupRate:Math.round(group/total*100),streak};
   };
 
-  const statusLabel: Record<string,string> = {active:'활동중',care:'관리필요',inactive:'비활성',moved:'이동'};
-  const statusColor: Record<string,string> = {active:'#198754',care:'#dc8a00',inactive:'#dc3545',moved:'#6c757d'};
-  const statusBg: Record<string,string> = {active:'#d1e7dd',care:'#fff3cd',inactive:'#f8d7da',moved:'#e9ecef'};
+  const statusLabel: Record<string,string> = {active:'활동중',care:'관리필요',inactive:'장기불참',lineout:'라인아웃'};
+  const statusColor: Record<string,string> = {active:'#198754',care:'#dc8a00',inactive:'#6c757d',lineout:'#7c3aed'};
+  const statusBg: Record<string,string> = {active:'#d1e7dd',care:'#fff3cd',inactive:'#e9ecef',lineout:'#ede9fe'};
   const allStats = members.map(m => ({...m, stats: getMemberStats(m.id)}));
   const avgWorship = Math.round(allStats.reduce((s,m) => s+m.stats.worshipRate,0)/(allStats.length||1));
   const avgGroup = Math.round(allStats.reduce((s,m) => s+m.stats.groupRate,0)/(allStats.length||1));
