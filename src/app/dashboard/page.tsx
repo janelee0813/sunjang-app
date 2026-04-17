@@ -383,12 +383,19 @@ export default function DashboardPage() {
                 formatter={(value: any) => [`${value}%`]}
                 contentStyle={{ fontSize: '12px', borderRadius: '8px', border: '1px solid #e9ecef' }}
               />
-              <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: '12px', paddingTop: '8px' }}
-                payload={[
-                  { value: '예배', type: 'circle', color: '#1a56db' },
-                  { value: '부서', type: 'circle', color: '#0f6e56' },
-                  { value: '순모임', type: 'circle', color: '#7c3aed' },
-                ]} />
+              <Legend
+                wrapperStyle={{ fontSize: '12px', paddingTop: '8px' }}
+                content={() => (
+                  <div style={{ display: 'flex', justifyContent: 'center', gap: '16px' }}>
+                    {[{ label: '예배', color: '#1a56db' }, { label: '부서', color: '#0f6e56' }, { label: '순모임', color: '#7c3aed' }].map(item => (
+                      <span key={item.label} style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '12px', color: '#374151' }}>
+                        <span style={{ width: 8, height: 8, borderRadius: '50%', background: item.color, display: 'inline-block' }} />
+                        {item.label}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              />
               <Bar dataKey="예배" fill="#1a56db" radius={[3, 3, 0, 0]} maxBarSize={28} />
               <Bar dataKey="부서" fill="#0f6e56" radius={[3, 3, 0, 0]} maxBarSize={28} />
               <Bar dataKey="순모임" fill="#7c3aed" radius={[3, 3, 0, 0]} maxBarSize={28} />
